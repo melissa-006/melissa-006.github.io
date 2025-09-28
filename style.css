@@ -1027,6 +1027,7 @@ footer {
   .banner {
     font-size: 5rem;
     height: 6rem;
+    margin-top: -2rem;
   }
 
   .profile-container {
@@ -1042,9 +1043,8 @@ footer {
   }
 
   .landing {
-    padding: 1rem;
-    padding-top: 1rem;
-    min-height: 50vh;
+    padding: 0 1rem;
+    min-height: auto;
     gap: 0rem;
   }
 
