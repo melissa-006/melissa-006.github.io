@@ -1,0 +1,2 @@
+- [x] Wrap contact info paragraphs in contact.html with <div class="contact-box">
+- [x] Add CSS for .contact-box in style.css with rounded edges, background, padding, and shadow
