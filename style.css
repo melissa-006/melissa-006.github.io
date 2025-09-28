@@ -250,7 +250,7 @@ header nav a:hover {
   min-height: 90vh;
   padding: 2rem;
   gap: 2rem;
-  padding-top: -3rem;
+  padding-top: 3rem;
 }
 
 .title-portfolio {
@@ -972,5 +972,147 @@ footer {
 
   .contact-image {
     width: 120px;
+  }
+}
+
+/* Enhanced Responsive Media Queries */
+@media (max-width: 1200px) {
+  .banner {
+    font-size: 10rem;
+    height: 10rem;
+  }
+
+  .profile-img {
+    max-width: 350px;
+  }
+
+  .floating-text {
+    font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 992px) {
+  header {
+    padding: 1rem 1.5rem;
+  }
+
+  .banner {
+    font-size: 8rem;
+    height: 8rem;
+  }
+
+  .profile-container {
+    margin-top: -7rem;
+  }
+
+  .profile-img {
+    max-width: 300px;
+  }
+
+  .floating-text {
+    font-size: 2rem;
+  }
+
+  .landing {
+    padding: 1.5rem;
+    padding-top: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 0.8rem 1rem;
+  }
+
+  .banner {
+    font-size: 5rem;
+    height: 6rem;
+  }
+
+  .profile-container {
+    margin-top: -4rem;
+  }
+
+  .profile-img {
+    max-width: 250px;
+  }
+
+  .floating-text {
+    font-size: 1.8rem;
+  }
+
+  .landing {
+    padding: 1rem;
+    padding-top: 1.5rem;
+    min-height: 80vh;
+  }
+
+  /* Ensure all images are fully responsive */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .image-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .banner {
+    font-size: 3.5rem;
+    height: 4.5rem;
+  }
+
+  .profile-container {
+    margin-top: -3rem;
+  }
+
+  .profile-img {
+    max-width: 200px;
+  }
+
+  .floating-text {
+    font-size: 1.5rem;
+  }
+
+  .landing {
+    padding: 0.8rem;
+    padding-top: 1rem;
+  }
+
+  .image-grid {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  header .logo {
+    font-size: 1.2rem;
+  }
+
+  .banner {
+    font-size: 2.5rem;
+    height: 3.5rem;
+  }
+
+  .profile-container {
+    margin-top: -2rem;
+  }
+
+  .profile-img {
+    max-width: 180px;
+  }
+
+  .floating-text {
+    font-size: 1.3rem;
+  }
+
+  .landing {
+    padding: 0.5rem;
+    padding-top: 0.8rem;
+    min-height: 70vh;
   }
 }
