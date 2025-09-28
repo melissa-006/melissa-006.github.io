@@ -179,11 +179,11 @@ const hobbies = {
   },
   'clay-modelling': {
     title: 'Clay Modelling',
-    content: '<p>I\’ve recently started experimenting with clay modelling and I\’m still learning the craft. It\’s a fun, hands-on way to explore creativity, even if things get a little messy. I\’ve attached a few of my early works in this section.</p><img src="images/clay work1.jpg" alt="Clay Work 1" style="max-width:100%; height:auto; margin:10px 0;"><img src="images/clay work2.jpg" alt="Clay Work 2" style="max-width:100%; height:auto; margin:10px 0;">'
+    content: '<p>I\’ve recently started experimenting with clay modelling and I\’m still learning the craft. It\’s a fun, hands-on way to explore creativity, even if things get a little messy. I\’ve attached a few of my early works in this section.</p><img data-src="images/clay work1.jpg" class="lazy" src="" alt="Clay Work 1" style="max-width:100%; height:auto; margin:10px 0;"><img data-src="images/clay work2.jpg" class="lazy" src="" alt="Clay Work 2" style="max-width:100%; height:auto; margin:10px 0;">'
   },
   'digital-art': {
     title: 'Digital Art',
-    content: '<p>I\’m just starting out with digital art and experimenting with different tools and styles. It\’s a beginner\’s journey for me, but I enjoy sketching and creating whenever inspiration strikes. A few of my works are attached here as well.</p><img src="images/eye digital painting .png" alt="Eye Digital Painting" style="max-width:100%; height:auto; margin:10px 0;"><img src="images/DRAWINGS 2.jpg" alt="Drawings 2" style="max-width:100%; height:auto; margin:10px 0;">'
+    content: '<p>I\’m just starting out with digital art and experimenting with different tools and styles. It\’s a beginner\’s journey for me, but I enjoy sketching and creating whenever inspiration strikes. A few of my works are attached here as well.</p><img data-src="images/eye digital painting .png" class="lazy" src="" alt="Eye Digital Painting" style="max-width:100%; height:auto; margin:10px 0;"><img data-src="images/DRAWINGS 2.jpg" class="lazy" src="" alt="Drawings 2" style="max-width:100%; height:auto; margin:10px 0;">'
   },
   'travelling': {
     title: 'Travelling',
@@ -209,6 +209,8 @@ hobbyButtons.forEach(button => {
     const hobby = button.getAttribute('data-hobby');
     const data = hobbies[hobby];
     modalBody.innerHTML = `<h3>${data.title}</h3>${data.content}`;
+    const modalLazyImages = modalBody.querySelectorAll('img.lazy');
+    modalLazyImages.forEach(img => imageObserver.observe(img));
     hobbyModal.style.display = 'flex';
   });
 });
@@ -234,36 +236,38 @@ document.addEventListener('keydown', (e) => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  const galleryGrid = document.querySelector('#gallery .grid');
-  const loadingSpinner = document.querySelector('.loading-spinner');
-  const galleryImages = document.querySelectorAll('#gallery .gallery-item img');
+  const gallerySection = document.querySelector('#gallery');
+  if (gallerySection) {
+    const galleryGrid = gallerySection.querySelector('.grid');
+    const loadingSpinner = gallerySection.querySelector('.loading-spinner');
+    const galleryImages = gallerySection.querySelectorAll('.gallery-item img');
 
-  if (galleryImages.length > 0) {
-    // Create promises for each image load
-    const imagePromises = Array.from(galleryImages).map(img => {
-      return new Promise((resolve, reject) => {
-        if (img.complete) {
-          resolve();
-        } else {
-          img.addEventListener('load', resolve);
-          img.addEventListener('error', reject);
-        }
-      });
-    });
+    // Hide spinner and show grid immediately, lazy loading will handle image loads
+    if (loadingSpinner) loadingSpinner.style.display = 'none';
+    if (galleryGrid) galleryGrid.style.display = 'block';
 
-    // Wait for all images to load
-    Promise.all(imagePromises).then(() => {
-      // Hide spinner and show grid
-      loadingSpinner.style.display = 'none';
-      galleryGrid.style.display = 'block';
-    }).catch(() => {
-      // In case of error, still show the grid
-      loadingSpinner.style.display = 'none';
-      galleryGrid.style.display = 'block';
+    // Observe gallery images for lazy loading
+    galleryImages.forEach(img => {
+      if (img.classList.contains('lazy')) {
+        imageObserver.observe(img);
+      }
     });
-  } else {
-    // No images, show grid immediately
-    loadingSpinner.style.display = 'none';
-    galleryGrid.style.display = 'block';
   }
+});
+
+// Lazy loading for images
+const imageObserver = new IntersectionObserver((entries, observer) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const img = entry.target;
+      img.src = img.dataset.src;
+      img.classList.remove('lazy');
+      observer.unobserve(img);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  const lazyImages = document.querySelectorAll('img.lazy');
+  lazyImages.forEach(img => imageObserver.observe(img));
 });
