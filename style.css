@@ -1049,7 +1049,7 @@ footer {
   }
 
   .image-grid-section {
-    padding: 1rem 2rem;
+    padding: 0 2rem;
   }
 
   /* Ensure all images are fully responsive */
