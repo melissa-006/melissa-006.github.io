@@ -242,11 +242,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadingSpinner = gallerySection.querySelector('.loading-spinner');
     const galleryImages = gallerySection.querySelectorAll('.gallery-item img');
 
-    // Hide spinner and show grid immediately, lazy loading will handle image loads
-    if (loadingSpinner) loadingSpinner.style.display = 'none';
-    if (galleryGrid) galleryGrid.style.display = 'block';
+    let loadedCount = 0;
+    const totalImages = galleryImages.length;
 
-    // Observe gallery images for lazy loading
+    // Function to check if all images are loaded
+    const checkAllLoaded = () => {
+      if (loadedCount === totalImages) {
+        if (loadingSpinner) loadingSpinner.style.display = 'none';
+        if (galleryGrid) galleryGrid.style.display = 'block';
+      }
+    };
+
+    // If no images, show grid immediately
+    if (totalImages === 0) {
+      if (loadingSpinner) loadingSpinner.style.display = 'none';
+      if (galleryGrid) galleryGrid.style.display = 'block';
+      return;
+    }
+
+    // Add load and error listeners to each image
+    galleryImages.forEach(img => {
+      if (img.complete) {
+        loadedCount++;
+      } else {
+        img.addEventListener('load', () => {
+          loadedCount++;
+          checkAllLoaded();
+        });
+        img.addEventListener('error', () => {
+          loadedCount++; // Count errors as loaded to avoid hanging
+          checkAllLoaded();
+        });
+      }
+    });
+
+    // Check initially in case some are already loaded
+    checkAllLoaded();
+
+    // Observe gallery images for lazy loading if needed
     galleryImages.forEach(img => {
       if (img.classList.contains('lazy')) {
         imageObserver.observe(img);
