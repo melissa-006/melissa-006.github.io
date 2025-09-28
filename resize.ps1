@@ -1,5 +1,21 @@
 Add-Type -AssemblyName System.Drawing
 
+function Rotate-Image {
+    param([System.Drawing.Image]$Image, [int]$Orientation)
+    if ($Orientation -eq 1) { return $Image }  # Normal
+    $rotated = New-Object System.Drawing.Bitmap($Image.Height, $Image.Width)
+    $g = [System.Drawing.Graphics]::FromImage($rotated)
+    $g.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
+    switch ($Orientation) {
+        3 { $g.TranslateTransform($Image.Width / 2, $Image.Height / 2); $g.RotateTransform(180); $g.TranslateTransform(-$Image.Width / 2, -$Image.Height / 2) }
+        6 { $g.TranslateTransform($Image.Height, 0); $g.RotateTransform(90); $g.TranslateTransform(0, -$Image.Height) }
+        8 { $g.TranslateTransform($Image.Width, 0); $g.RotateTransform(270); $g.TranslateTransform(0, -$Image.Width) }
+    }
+    $g.DrawImage($Image, 0, 0)
+    $g.Dispose()
+    return $rotated
+}
+
 $images = @(
     "DSC00289.JPG", "DSC00295.JPG", "DSC00798.JPG", "DSC00325.JPG", "DSC00376.JPG", "DSC00384.JPG", "DSC00399.JPG", "DSC00425.JPG", "DSC00456.JPG", "DSC00473.JPG",
     "DSC00546.JPG", "DSC00548.JPG", "DSC00549.JPG", "DSC00554.JPG", "DSC00629.JPG", "DSC00637.JPG", "DSC00644.JPG", "DSC00648.JPG", "DSC00653.JPG", "DSC00672.JPG",
@@ -21,26 +37,44 @@ foreach ($img in $images) {
     $path = "images\$img"
     if (Test-Path $path) {
         $original = [System.Drawing.Image]::FromFile($path)
+        
+        # Read EXIF orientation
+        $orientation = 1
+        try {
+            $propItem = $original.GetPropertyItem(0x0112)
+            if ($propItem) {
+                $orientation = [System.BitConverter]::ToUInt16($propItem.Value, 0)
+            }
+        } catch {
+            # No EXIF or error, use default
+        }
+        
+        # Rotate if needed
+        $oriented = Rotate-Image -Image $original -Orientation $orientation
+        
         for ($i = 0; $i -lt $sizes.Length; $i++) {
             $size = $sizes[$i]
             $suffix = $suffixes[$i]
             $newPath = "images\$base-$suffix$ext"
-            if ($original.Width -gt $size) {
-                $ratio = $size / $original.Width
-                $newHeight = [int]($original.Height * $ratio)
+            if ($oriented.Width -gt $size) {
+                $ratio = $size / $oriented.Width
+                $newHeight = [int]($oriented.Height * $ratio)
                 $resized = New-Object System.Drawing.Bitmap $size, $newHeight
                 $graphics = [System.Drawing.Graphics]::FromImage($resized)
                 $graphics.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
-                $graphics.DrawImage($original, 0, 0, $size, $newHeight)
+                $graphics.DrawImage($oriented, 0, 0, $size, $newHeight)
                 $resized.Save($newPath, [System.Drawing.Imaging.ImageFormat]::Jpeg)
                 $graphics.Dispose()
                 $resized.Dispose()
             } else {
-                Copy-Item $path $newPath
+                # For small images, copy the oriented version
+                $oriented.Save($newPath, [System.Drawing.Imaging.ImageFormat]::Jpeg)
             }
         }
+        
+        $oriented.Dispose()
         $original.Dispose()
     }
 }
 
-Write-Host "Resizing complete."
+Write-Host "Resizing complete with EXIF orientation correction."

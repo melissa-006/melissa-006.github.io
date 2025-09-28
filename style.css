@@ -1044,7 +1044,12 @@ footer {
   .landing {
     padding: 1rem;
     padding-top: 1rem;
-    min-height: 60vh;
+    min-height: 50vh;
+    gap: 1rem;
+  }
+
+  .image-grid-section {
+    padding: 1rem 2rem;
   }
 
   /* Ensure all images are fully responsive */

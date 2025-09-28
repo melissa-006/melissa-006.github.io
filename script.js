@@ -236,18 +236,23 @@ document.addEventListener('keydown', (e) => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('Gallery DOMContentLoaded started');
   const gallerySection = document.querySelector('#gallery');
+  console.log('Gallery section found:', !!gallerySection);
   if (gallerySection) {
     const galleryGrid = gallerySection.querySelector('.grid');
     const loadingSpinner = gallerySection.querySelector('.loading-spinner');
     const galleryImages = gallerySection.querySelectorAll('.gallery-item img');
+    console.log('Total images found:', galleryImages.length);
 
     let loadedCount = 0;
     const totalImages = galleryImages.length;
 
     // Function to check if all images are loaded
     const checkAllLoaded = () => {
+      console.log('checkAllLoaded called, count:', loadedCount, '/', totalImages);
       if (loadedCount === totalImages) {
+        console.log('All images loaded, hiding spinner');
         if (loadingSpinner) loadingSpinner.style.display = 'none';
         if (galleryGrid) galleryGrid.style.display = 'block';
       }
@@ -262,22 +267,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Add load and error listeners to each image
     galleryImages.forEach(img => {
+      console.log('Adding listeners to image:', img.src);
       if (img.complete) {
         loadedCount++;
+        console.log('Image complete:', loadedCount);
       } else {
         img.addEventListener('load', () => {
           loadedCount++;
+          console.log('Image loaded:', loadedCount, '/', totalImages);
           checkAllLoaded();
         });
         img.addEventListener('error', () => {
           loadedCount++; // Count errors as loaded to avoid hanging
+          console.log('Image error:', loadedCount, '/', totalImages);
           checkAllLoaded();
         });
       }
     });
 
+    // Fallback check for broken images (events may not fire)
+    setTimeout(() => {
+      console.log('Checking for broken images');
+      galleryImages.forEach(img => {
+        if (!img.complete && img.naturalWidth === 0) {
+          loadedCount++;
+          console.log('Detected broken image:', loadedCount, '/', totalImages);
+          checkAllLoaded();
+        }
+      });
+    }, 100);
+
     // Check initially in case some are already loaded
     checkAllLoaded();
+    console.log('Initial loadedCount:', loadedCount, '/', totalImages);
+
+    // Fallback timeout to hide spinner if images fail to load
+    setTimeout(() => {
+      console.log('Timeout triggered, hiding spinner');
+      if (loadingSpinner && galleryGrid) {
+        loadingSpinner.style.display = 'none';
+        galleryGrid.style.display = 'block';
+      }
+    }, 5000); // 5 seconds
 
     // Observe gallery images for lazy loading if needed
     galleryImages.forEach(img => {
