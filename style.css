@@ -1043,8 +1043,8 @@ footer {
 
   .landing {
     padding: 1rem;
-    padding-top: 1.5rem;
-    min-height: 80vh;
+    padding-top: 1rem;
+    min-height: 60vh;
   }
 
   /* Ensure all images are fully responsive */
@@ -1083,8 +1083,9 @@ footer {
   }
 
   .image-grid {
-    grid-template-columns: 1fr;
-    gap: 0.8rem;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, auto);
+    gap: 1rem;
   }
 }
 
