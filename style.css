@@ -1045,7 +1045,7 @@ footer {
     padding: 1rem;
     padding-top: 1rem;
     min-height: 50vh;
-    gap: 1rem;
+    gap: 0rem;
   }
 
   .image-grid-section {
