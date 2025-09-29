@@ -187,7 +187,7 @@ const hobbies = {
   },
   'travelling': {
     title: 'Travelling',
-    content: '<p>Travelling gives me fresh perspectives and new stories to carry back. I enjoy discovering new places, experiencing cultures, and finding the little moments that make each trip special.</p><p>Countries I’ve visited so far:</p><ul><li>USA: Washington, New York City, Florida</li><li>Australia: Sydney</li><li>China: Shanghai, Beijing</li><li>Azerbaijan</li><li>Singapore</li><li>Thailand: Bangkok, Phuket</li><li>Hong Kong</li></ul>'
+    content: '<p>Travelling gives me fresh perspectives and new stories to carry back. I enjoy discovering new places, experiencing cultures, and finding the little moments that make each trip special.</p><p>Countries I’ve visited so far:</p><ul><li>USA: Washington, New York City, Florida</li><li>Australia: Sydney</li><li>China: Shanghai, Beijing</li><li>Azerbaijan</li><li>Singapore</li><li>Thailand: Bangkok, Phuket</li><li>Hong Kong</li><li>Taiwan</li><li>Malaysia: Langkawi, Kuala Lumpur</li></ul>'
   },
   'anime': {
     title: 'Anime',
